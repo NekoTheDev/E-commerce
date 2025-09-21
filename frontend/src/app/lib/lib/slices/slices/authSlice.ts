@@ -24,20 +24,41 @@ const initialState: AuthState = {
   error: null,
 };
 
-export const login = createAsyncThunk(
+interface LoginCredentials {
+  email: string;
+  password: string;
+}
+
+interface LoginResponse {
+  token: string;
+  user: User;
+}
+
+export const login = createAsyncThunk<
+  LoginResponse, // kiểu trả về nếu thành công
+  LoginCredentials, // tham số đầu vào
+  { rejectValue: string } // kiểu reject
+>(
   'auth/login',
-  async (credentials: { email: string; password: string }, { rejectWithValue }) => {
+  async (credentials, { rejectWithValue }) => {
     try {
-      const response = await axios.post('http://localhost:3001/api/auth/login', credentials);
+      const response = await axios.post<LoginResponse>(
+        'http://localhost:3001/api/auth/login',
+        credentials
+      );
+
       const { token, user } = response.data;
-      
+
       if (typeof window !== 'undefined') {
         localStorage.setItem('token', token);
       }
-      
+
       return { token, user };
-    } catch (error: any) {
-      return rejectWithValue(error.response.data.message || 'Login failed');
+    } catch (error: unknown) {
+      if (axios.isAxiosError(error) && error.response) {
+        return rejectWithValue(error.response.data.message || 'Login failed');
+      }
+      return rejectWithValue('Login failed');
     }
   }
 );
@@ -64,7 +85,7 @@ const authSlice = createSlice({
         state.loading = true;
         state.error = null;
       })
-      .addCase(login.fulfilled, (state, action: PayloadAction<{ token: string; user: User }>) => {
+      .addCase(login.fulfilled, (state, action: PayloadAction<LoginResponse>) => {
         state.loading = false;
         state.isAuthenticated = true;
         state.token = action.payload.token;
@@ -73,7 +94,7 @@ const authSlice = createSlice({
       .addCase(login.rejected, (state, action) => {
         state.loading = false;
         state.isAuthenticated = false;
-        state.error = action.payload as string;
+        state.error = action.payload || 'Login failed';
       });
   },
 });

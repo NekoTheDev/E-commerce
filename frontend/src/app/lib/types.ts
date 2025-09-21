@@ -1,13 +1,17 @@
 // frontend/src/app/lib/types.ts
 
 export interface Product {
-  id: string;
+  id: number;
   name: string;
-  description?: string;
+  description?: string | null;
   price: number;
-  image?: string;
+  image?: string | null;
   stock: number;
+  category: string;
+  createdAt: string; // Date được serialize thành string khi trả JSON
+  updatedAt: string;
 }
+
 
 export interface CartItem {
   id: string;

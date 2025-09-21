@@ -1,8 +1,8 @@
-// frontend/lib/redux/store.ts
+// frontend/src/app/lib/store.ts
 import { configureStore } from '@reduxjs/toolkit';
 import authReducer from './slices/authSlice';
 import cartReducer from './slices/cartSlice';
-import productReducer from '@/app/lib/slices/productSlice';
+import productReducer from './slices/productSlice';
 
 export const store = configureStore({
   reducer: {

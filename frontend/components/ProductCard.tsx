@@ -3,10 +3,10 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { Product } from '@prisma/client';
 import { useDispatch } from 'react-redux';
-import { AppDispatch } from '@/app/lib/store';
-import { addToCart } from '@/app/lib/slices/cartSlice';
+import { Product } from '../src/app/lib/types';
+import { AppDispatch } from '../src/app/lib/lib/slices/store';
+import { addToCart } from '../src/app/lib/lib/slices/slices/cartSlice';
 
 interface ProductCardProps {
   product: Product;
@@ -17,7 +17,7 @@ export default function ProductCard({ product }: ProductCardProps) {
 
   const handleAddToCart = () => {
     dispatch(addToCart({
-      id: product.id,
+      id: String(product.id),
       name: product.name,
       price: product.price,
       image: product.image || '',
