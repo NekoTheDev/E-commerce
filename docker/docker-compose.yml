@@ -23,10 +23,6 @@ services:
     environment:
       DATABASE_URL: postgresql://admin:password@postgres:5432/ecommerce
       JWT_SECRET: your-super-secret-jwt-key
-      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
-      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
-      AWS_REGION: ${AWS_REGION}
-      AWS_S3_BUCKET: ${AWS_S3_BUCKET}
     depends_on:
       - postgres
     networks:
